@@ -97,8 +97,8 @@ class WikiTableScraper(Scraper):
         self.table = table_to_2d(tables[table])  # type: List[List[str]]
         self.mapping = kwargs.get("mapping", {})  # type: Dict[str, int]
         self.row = kwargs.get("row", "episode_num")  # type: str
-        self.directors_split = kwargs.get("row", "lambda x: x.split()")  # type: str
-        self.writers_split = kwargs.get("row", "lambda x: x.split()")  # type: str
+        self.directors_split = kwargs.get("directors_split", "lambda x: x.split()")  # type: str
+        self.writers_split = kwargs.get("writers_split", "lambda x: x.split()")  # type: str
 
     def _process_episode(self, episode: Episode, episode_num: int):
         row_i = eval(self.row)
@@ -218,20 +218,20 @@ class HtmlScraper(Scraper):
         if selector is None:
             return None
         value = None
-        local = locals()
+        d = dict(locals(), **globals())
         for command in selector:
-            exec(command, globals(), local)
-        return local.get("value", value)
+            exec(command, d, d)
+        return d.get("value", value)
 
     def _set_episode(self, episode: Episode, key: str, episode_num: int, soup: BeautifulSoup):
         selector = self._get_selector(key, episode_num)
         if selector is None:
             return
         value = None
-        local = locals()
+        d = dict(locals(), **globals())
         for command in selector:
-            exec(command, globals(), local)
-        value = local.get("value", value)
+            exec(command, d, d)
+        value = d.get("value", value)
         setattr(episode, key, value)
 
     def _get_selector(self, key: str, episode_num: int) -> Optional[Dict[str, str]]:
