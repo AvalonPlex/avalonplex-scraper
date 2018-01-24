@@ -95,6 +95,7 @@ def scrap_episode(episode_num: int, output: str, scrapers: List[Scraper], name: 
                     if ext is None:
                         ext = ".png"
                     thumbnail_path += ext
+                    response.raw.decode_content = True
                     image = Image.open(response.raw)  # type: Image
                     image.save(thumbnail_path)
                     download_thumb = False

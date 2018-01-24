@@ -181,7 +181,7 @@ class TvDbScrapper(Scraper):
     def _get_thumbnail(self, episode_num: int) -> Optional[str]:
         json_result = self._load_episode(episode_num)
         thumbnail = json_result["filename"]
-        if not thumbnail.isspace():
+        if not thumbnail.isspace() and (self.usage is None or "thumbnail" in self.usage):
             return f"https://www.thetvdb.com/banners/{thumbnail}"
         return None
 
