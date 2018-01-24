@@ -1,0 +1,6 @@
+-e git+https://github.com/AvalonPlex/avalonplex-core.git@1.0.1#egg=avalonplex_core
+beautifulsoup4==4.6.0
+Pillow==5.0.0
+requests==2.18.4
+selenium==3.8.1
+html5lib==1.0.1
