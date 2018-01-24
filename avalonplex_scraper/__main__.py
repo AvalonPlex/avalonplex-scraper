@@ -32,6 +32,15 @@ def main():
     if series_config is None:
         raise ValueError("Missing series name.")
 
+    start = args.start
+    end = args.end
+    if start is None or end is None:
+        start = args.episode
+        end = args.episode
+    if start is None or end is None:
+        start = int(input("Enter start:"))
+        end = int(input("Enter end:"))
+
     scraper_configs = series_config.get("scraper", [])
     scrapers = []
     for scraper_config in scraper_configs:
@@ -51,14 +60,6 @@ def main():
     output = series_config.get("output", "")
 
     episodes = []
-    start = args.start
-    end = args.end
-    if start is None or end is None:
-        start = args.episode
-        end = args.episode
-    if start is None or end is None:
-        start = int(input("Enter start:"))
-        end = int(input("Enter end:"))
     for i in range(start, end + 1):
         episode = scrap_episode(i, output, scrapers, name, season)
         episodes.append(episode)
@@ -77,18 +78,19 @@ def scrap_episode(episode_num: int, output: str, scrapers: List[Scraper], name: 
             thumbnail = scraper.get_thumbnail(episode_num)
             if thumbnail is not None:
                 response = requests.get(thumbnail, stream=True)
-                content_type = response.headers.get("content-type")
-                ext = None
-                if content_type is not None:
-                    ext = mimetypes.guess_extension(content_type)
-                    if ext in [".jpe", ".jpeg"]:
-                        ext = ".jpg"
-                if ext is None:
-                    ext = ".png"
-                thumbnail_path += ext
-                image = Image.open(response.raw)  # type: Image
-                image.save(thumbnail_path)
-                download_thumb = False
+                if response.status_code == 200:
+                    content_type = response.headers.get("content-type")
+                    ext = None
+                    if content_type is not None:
+                        ext = mimetypes.guess_extension(content_type)
+                        if ext in [".jpe", ".jpeg"]:
+                            ext = ".jpg"
+                    if ext is None:
+                        ext = ".png"
+                    thumbnail_path += ext
+                    image = Image.open(response.raw)  # type: Image
+                    image.save(thumbnail_path)
+                    download_thumb = False
         scraper.process_episode(episode, episode_num)
     return episode
 

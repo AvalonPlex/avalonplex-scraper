@@ -50,7 +50,7 @@ class Scraper:
         try:
             self._process_episode(episode, episode_num)
         except Exception as e:
-            if self.config.get("catch", False):
+            if not self.config.get("catch", False):
                 raise e
             else:
                 print(traceback.format_exc())
@@ -59,6 +59,16 @@ class Scraper:
         raise NotImplementedError
 
     def get_thumbnail(self, episode_num: int) -> Optional[str]:
+        try:
+            return self._get_thumbnail(episode_num)
+        except Exception as e:
+            if not self.config.get("catch", False):
+                raise e
+            else:
+                print(traceback.format_exc())
+                return None
+
+    def _get_thumbnail(self, episode_num: int) -> Optional[str]:
         return None
 
 
@@ -168,7 +178,7 @@ class TvDbScrapper(Scraper):
             except ValueError:
                 episode.aired = None
 
-    def get_thumbnail(self, episode_num: int) -> Optional[str]:
+    def _get_thumbnail(self, episode_num: int) -> Optional[str]:
         json_result = self._load_episode(episode_num)
         thumbnail = json_result["filename"]
         if not thumbnail.isspace():
@@ -202,7 +212,7 @@ class HtmlScraper(Scraper):
         for attr in [a for a in dir(episode) if not a.startswith("_")]:
             self._set_episode(episode, attr, episode_num, soup)
 
-    def get_thumbnail(self, episode_num: int) -> Optional[str]:
+    def _get_thumbnail(self, episode_num: int) -> Optional[str]:
         soup = self._load_html(episode_num)
         selector = self._get_selector("thumbnail", episode_num)
         if selector is None:
