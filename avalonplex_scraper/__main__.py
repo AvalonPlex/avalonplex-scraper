@@ -8,6 +8,7 @@ import requests
 from PIL import Image
 from avalonplex_core.model import Episode
 from avalonplex_core.serialize import XmlSerializer
+from avalonplex_core.normalize import normalize
 
 from avalonplex_scraper.scraper import WikiTableScraper, ConstantScraper, TvDbScrapper, Scraper, HtmlScraper
 
@@ -62,6 +63,10 @@ def main():
     episodes = []
     for i in range(start, end + 1):
         episode = scrap_episode(i, output, scrapers, name, season)
+        episode.title = normalize(episode.title)
+        episode.plot = normalize(episode.plot)
+        episode.writers = [normalize(w) for w in episode.writers]
+        episode.directors = [normalize(w) for w in episode.directors]
         episodes.append(episode)
     xml_serializer = XmlSerializer(ignore_blank=False, ignore_none=False, ignore_empty=False)
     for e in episodes:
