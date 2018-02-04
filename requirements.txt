@@ -1,4 +1,4 @@
--e git+https://github.com/AvalonPlex/avalonplex-core.git@1.0.3#egg=avalonplex_core
+-e git+https://github.com/AvalonPlex/avalonplex-core.git@1.0.4#egg=avalonplex_core
 beautifulsoup4==4.6.0
 Pillow==5.0.0
 requests==2.18.4

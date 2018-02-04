@@ -23,7 +23,7 @@ def main():
     factories, runners = load_all_plugins()
 
     runner = runners[args.runner]
-    path = args.output if not args.output.isspace() else runner.get_output()
+    path = runner.get_output() if args.output.strip() == "" else args.output
     output = Path(path)
     output.mkdir(parents=True, exist_ok=True)
 
