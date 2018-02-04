@@ -34,5 +34,9 @@ class Scraper:
     def _get_thumbnail(self, episode_num: int) -> Optional[str]:
         return None
 
+    @staticmethod
+    def require_config() -> Optional[str]:
+        return None
+
 
 __all__ = [Scraper]

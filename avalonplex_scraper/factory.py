@@ -14,7 +14,7 @@ class ScraperFactory:
         raise NotImplementedError()
 
     def require_config(self, name: str) -> Optional[str]:
-        return name
+        raise NotImplementedError()
 
 
 class SimpleScraperFactory(ScraperFactory):
@@ -29,7 +29,13 @@ class SimpleScraperFactory(ScraperFactory):
         creator = self._mapping.get(name)
         if not callable(creator):
             raise NotImplementedError()
-        return self._mapping[name](**kwargs)
+        return creator(**kwargs)
+
+    def require_config(self, name: str) -> Optional[str]:
+        creator = self._mapping.get(name)
+        if issubclass(Scraper, creator):
+            raise NotImplementedError()
+        return creator.require_config()
 
 
 __all__ = [ScraperFactory, SimpleScraperFactory]

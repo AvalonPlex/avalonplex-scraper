@@ -45,9 +45,6 @@ class Factory(avalonplex_scraper.SimpleScraperFactory):
             "11eyes.html": HtmlScraper
         })
 
-    def require_config(self, name: str):
-        return "tvdb" if name == "11eyes.tvdb" else super().require_config(name)
-
 
 class Runner(avalonplex_scraper.Runner):
     def __init__(self):

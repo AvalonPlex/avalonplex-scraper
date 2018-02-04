@@ -173,6 +173,10 @@ class TvDbScrapper(Scraper):
         response = requests.get(url, headers=self.headers)
         return json.loads(response.text)["data"]
 
+    @staticmethod
+    def require_config() -> Optional[str]:
+        return "tvdb"
+
 
 class HtmlScraper(Scraper):
     def __init__(self, use_selenium: bool = False, **kwargs):

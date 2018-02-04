@@ -12,7 +12,6 @@ def main():
     parser = ArgumentParser(description="Avalon Plex Xml Scraper")
     parser.add_argument("runner", metavar="runner", type=str, help="runner")
     parser.add_argument("-o", "--output", metavar="output", default="", type=str, help="Output")
-    parser.add_argument("-c", "--config", type=str, default="config.json", help="Config file")
     parser.add_argument("-p", "--scrapers_config", type=str, default="scrapers.json", help="Scrapers config file")
     parser.add_argument("-e", "--episode", type=int, help="Episode")
     parser.add_argument("-S", "--start", type=int, help="Start episode")
@@ -21,12 +20,12 @@ def main():
     with open(args.scrapers_config, "r", encoding="utf-8") as file:
         scrapers_config = json.load(file)
 
-    output = Path(args.output)
-    output.mkdir(parents=True, exist_ok=True)
-
     factories, runners = load_all_plugins()
 
     runner = runners[args.runner]
+    path = args.output if not args.output.isspace() else runner.get_output()
+    output = Path(path)
+    output.mkdir(parents=True, exist_ok=True)
 
     start = args.start
     end = args.end

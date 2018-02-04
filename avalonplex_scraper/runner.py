@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, Tuple, Any
+from typing import Dict, List, Tuple, Any, Optional
 
 from avalonplex_core import Episode
 
@@ -44,3 +44,6 @@ class Runner:
             if thumb is not None:
                 thumbs.append(thumb)
         return episode, thumbs
+
+    def get_output(self) -> str:
+        return ""
